@@ -48,3 +48,19 @@ select {
   background-size: 1.5em;
   padding-right: 2.5rem;
 }
+
+/* Ensure the search bar is solid and visible */
+.search-container input {
+    background-color: rgba(255, 255, 255, 1) !important; /* Force solid white */
+    border: 1px solid #ccc;
+    color: #333; /* Dark text for readability */
+    opacity: 1 !important;
+    backdrop-filter: none !important; /* Remove any blur that might be causing the 'ghost' effect */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2); /* Add a slight shadow to pop out from the map */
+}
+
+/* Fix placeholder text transparency */
+.search-container input::placeholder {
+    color: #666;
+    opacity: 1;
+}

@@ -25,7 +25,7 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -181,46 +181,64 @@ const Chatbot = () => {
 
     // Simulate AI "Processing"
     setTimeout(() => {
-      const query = userMsg.toLowerCase();
+      const query = userMsg.toLowerCase().trim();
       let reply = "";
 
-      // 1. SMART FILTERING: Find schemes by State, Occupation, or Gender
-      const matchedSchemes = ALL_SCHEMES.filter(s => {
-        const nameMatch = s.name.toLowerCase().includes(query);
-        const stateMatch = s.state && query.includes(s.state.toLowerCase());
-        const occupationMatch = s.conditions.occupation && query.includes(s.conditions.occupation.toLowerCase());
-        const genderMatch = s.conditions.gender && (query.includes(genderToWord(s.conditions.gender)));
-        
-        return nameMatch || stateMatch || occupationMatch || genderMatch;
-      });
-
-      // Helper function for gender matching
-      function genderToWord(g: string) {
-        if (g === "Female") return "women" || "girl" || "female";
-        if (g === "Male") return "men" || "boy" || "male";
-        return "";
-      }
-
-      // 2. GENERATE RESPONSE
-      if (matchedSchemes.length > 0) {
-        const top3 = matchedSchemes.slice(0, 3);
-        const names = top3.map(s => s.name).join(", ");
-        
-        if (query.includes("what") || query.includes("list") || query.includes("show")) {
-          reply = `I found ${matchedSchemes.length} schemes matching your query. Some of them are: ${names}. You can see all of them by using our 'Check Eligibility' tool!`;
-        } else {
-          // If they named a specific scheme, give details
-          const exact = top3[0];
-          reply = `About ${exact.name}: This is a ${exact.type} scheme. Benefit: ${exact.benefit}. Would you like to know more?`;
-        }
+      // --- START: ADDED ANSWERS FOR SUGGESTED QUESTIONS ---
+      if (query === "what schemes am i eligible for?") {
+        reply = "To see personalized results, please click 'Check Eligibility' in the top menu. Once you fill in your profile (Age, Income, Occupation), I will show you exactly which government benefits you qualify for!";
       } 
-      // 3. GENERAL ASSISTANCE
-      else if (query.includes("how") || query.includes("help")) {
-        reply = "I am Vaaradhi AI. You can ask me things like 'What schemes are there for farmers?' or 'Show me schemes in Delhi'. To get a personalized result, please fill out our Eligibility Form!";
-      } else if (query.includes("aadhaar")) {
-        reply = "Aadhaar is essential for most schemes. If yours isn't updated, check our 'Aadhaar Assistance' section for video tutorials in 6 languages!";
-      } else {
-        reply = "That's a great question! While I'm still learning, I can help you find schemes related to your state or occupation. Try asking about 'Student scholarships' or 'Farmer support'.";
+      else if (query === "explain pm kisan samman nidhi") {
+        reply = "PM Kisan Samman Nidhi is a Central Government scheme that provides ₹6,000 per year in three installments to all landholding farmer families to support their financial needs.";
+      } 
+      else if (query === "how to update aadhaar?") {
+        reply = "Updating Aadhaar is simple. You can visit our 'Aadhaar Assistance' page for step-by-step video tutorials in 6 languages (Telugu, Hindi, English, etc.) that guide you through the process!";
+      } 
+      else if (query === "where is the nearest office?") {
+        reply = "You can use our interactive 'Find Offices' map! Just enter your city or area name in the search bar there to find the nearest Grama Sachivalayam or Aadhaar Center.";
+      }
+      // --- END: ADDED ANSWERS ---
+      
+      // KEEPING YOUR ORIGINAL LOGIC BELOW
+      else {
+        // 1. SMART FILTERING: Find schemes by State, Occupation, or Gender
+        const matchedSchemes = ALL_SCHEMES.filter(s => {
+          const nameMatch = s.name.toLowerCase().includes(query);
+          const stateMatch = s.state && query.includes(s.state.toLowerCase());
+          const occupationMatch = s.conditions.occupation && query.includes(s.conditions.occupation.toLowerCase());
+          const genderMatch = s.conditions.gender && (query.includes(genderToWord(s.conditions.gender)));
+          
+          return nameMatch || stateMatch || occupationMatch || genderMatch;
+        });
+
+        // Helper function for gender matching
+        function genderToWord(g: string) {
+          const q = query.toLowerCase();
+          if (g === "Female") return q.includes("women") || q.includes("girl") || q.includes("female");
+          if (g === "Male") return q.includes("men") || q.includes("boy") || q.includes("male");
+          return false;
+        }
+
+        // 2. GENERATE RESPONSE
+        if (matchedSchemes.length > 0) {
+          const top3 = matchedSchemes.slice(0, 3);
+          const names = top3.map(s => s.name).join(", ");
+          
+          if (query.includes("what") || query.includes("list") || query.includes("show")) {
+            reply = `I found ${matchedSchemes.length} schemes matching your query. Some of them are: ${names}. You can see all of them by using our 'Check Eligibility' tool!`;
+          } else {
+            const exact = top3[0];
+            reply = `About ${exact.name}: This is a ${exact.type} scheme. Benefit: ${exact.benefit}. Would you like to know more?`;
+          }
+        } 
+        // 3. GENERAL ASSISTANCE
+        else if (query.includes("how") || query.includes("help")) {
+          reply = "I am Vaaradhi AI. You can ask me things like 'What schemes are there for farmers?' or 'Show me schemes in Delhi'. To get a personalized result, please fill out our Eligibility Form!";
+        } else if (query.includes("aadhaar")) {
+          reply = "Aadhaar is essential for most schemes. If yours isn't updated, check our 'Aadhaar Assistance' section for video tutorials in 6 languages!";
+        } else {
+          reply = "That's a great question! While I'm still learning, I can help you find schemes related to your state or occupation. Try asking about 'Student scholarships' or 'Farmer support'.";
+        }
       }
 
       setMessages(prev => [...prev, { text: reply, isUser: false }]);
@@ -559,11 +577,14 @@ const OfficeLocator = () => {
           <div className="glass-card p-4 rounded-3xl border border-white/10 h-[500px] relative">
             <div className="absolute top-8 left-8 right-8 z-[1000] flex gap-2">
               <input 
-                type="text" 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search area or office name..." 
-                className="flex-1 bg-brand-dark/80 backdrop-blur-md border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-orange"
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search area or office name..." 
+              // 1. Keep the classes simple
+              className="flex-1 rounded-xl px-4 py-3 text-sm text-white focus:outline-none shadow-2xl"
+              // 2. Add this style line - this makes it solid black/dark and visible
+              style={{ backgroundColor: '#111', opacity: 1, border: '1px solid #444', zIndex: 1001 }}
               />
               <button 
                 onClick={handleSearch} 
