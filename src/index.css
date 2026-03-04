@@ -64,3 +64,24 @@ select {
     color: #666;
     opacity: 1;
 }
+
+/* FORCE SEARCH BAR VISIBILITY */
+.search-bar-fix {
+  background-color: #111111 !important; /* Solid dark background */
+  color: #ffffff !important;           /* Solid white text */
+  opacity: 1 !important;               /* No transparency */
+  border: 2px solid #ff4d00 !important; /* Bright orange border */
+  z-index: 9999 !important;            /* Stay on top of the map */
+  position: relative;
+}
+
+/* Ensure the placeholder text is also visible */
+.search-bar-fix::placeholder {
+  color: #aaaaaa !important;
+  opacity: 1 !important;
+}
+
+/* Fix for Leaflet map overlap issues */
+.leaflet-container {
+  z-index: 1 !important;
+}

@@ -563,28 +563,31 @@ const OfficeLocator = () => {
         <div className="w-full">
           <div className="glass-card p-4 rounded-3xl border border-white/10 h-[500px] relative">
             <div className="absolute top-8 left-8 right-8 z-[1000] flex gap-2">
-              <input 
-              type="text" 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search area or office name..." 
-              className="flex-1 rounded-xl px-4 py-3 text-sm text-white focus:outline-none shadow-2xl"
-              style={{ 
-                  backgroundColor: '#111', 
-                  opacity: 1, 
-                  border: '2px solid #ff4d00', 
-                  zIndex: 1001,
-                  color: 'white'
-              }}
-              />
-              <button 
-                onClick={handleSearch} 
-                disabled={loading}
-                className="px-6 py-3 bg-brand-orange rounded-xl text-sm font-bold shadow-lg disabled:opacity-50 text-white"
-                style={{ backgroundColor: '#ff4d00', zIndex: 1001 }}
-              >
-                {loading ? "..." : "Search"}
-              </button>
+              <div className="absolute top-8 left-8 right-8 z-[1001] flex gap-2 p-1 rounded-2xl" style={{ backgroundColor: '#000000', border: '1px solid #333' }}>
+  <input 
+    type="text" 
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+    placeholder="Search area or office name..." 
+    // We added 'bg-black' and removed any glass/transparent classes
+    className="flex-1 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"
+    style={{ 
+        backgroundColor: '#000000', 
+        opacity: 1, 
+        border: '1px solid #444',
+        color: 'white',
+        fontWeight: 'bold'
+    }}
+  />
+  <button 
+    onClick={handleSearch} 
+    disabled={loading}
+    className="px-6 py-3 rounded-xl text-sm font-bold shadow-lg disabled:opacity-50 text-white"
+    style={{ backgroundColor: '#ff4d00', border: 'none' }}
+  >
+    {loading ? "..." : "Search"}
+  </button>
+</div>
             </div>
             <div className="h-full rounded-2xl overflow-hidden">
               <MapContainer center={mapCenter} zoom={13} style={{ height: '100%', width: '100%' }}>
