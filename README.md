@@ -22,5 +22,5 @@ View your app in AI Studio: https://ai.studio/apps/385cb224-ae05-4624-b53c-f8b50
    ##TEAM MEMBERS
    Kushal Pureti - https://github.com/PuretiKushal
    Sai Mohit -
-   Taman -
+   Taman -   https://github.com/taman30
    Harshith - 
