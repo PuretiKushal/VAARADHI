@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://vaaradhi-project.vercel.app/">
-    <img src="https://img.shields.io/badge/Live%20Demo-Visit%20SmartHire-2ea44f?style=for-the-badge" alt="Live Demo"/>
+    <img src="https://img.shields.io/badge/Live%20Demo-Visit%20Vaaradhi-2ea44f?style=for-the-badge" alt="Live Demo"/>
   </a>
 </p>
 
