@@ -3,7 +3,7 @@
 
 **Bridging the gap between citizens and government welfare schemes.**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20VAARADHI-2ea44f?style=for-the-badge)](https://vaaradhi-project.vercel.app/)
+[![Live Demo]](https://vaaradhi-project.vercel.app/)
 
 ## About the Project
 
